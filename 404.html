@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Ulpan Hebrew has moved</title>
+<style>
+  :root { color-scheme: dark light }
+  body { margin:0; background:#0a0a0a; color:#e5e5e5; font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif }
+  main { max-width:34rem; margin:14vh auto; padding:0 1.4rem; text-align:center }
+  a { color:#4A9EDB }
+  @media (prefers-color-scheme: light) { body { background:#fff; color:#1a1a1a } a { color:#0071B9 } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Ulpan Hebrew has moved</h1>
+  <p>New address: <a id="new" href="https://ulpan-hebrew.pages.dev/">https://ulpan-hebrew.pages.dev/</a></p>
+  <noscript><p>Open the new address and install the app again from there.</p></noscript>
+</main>
+<script>
+/* LAST page of the old GitHub Pages site. Served for every path, by the service worker and by
+   404.html, so it must not depend on any relative resource. It sends the visitor to the same page
+   on the new origin, and carries the learning data with it: localStorage does not cross origins,
+   so the keys travel in the URL fragment to https://ulpan-hebrew.pages.dev/migrate (migrate.html), which copies them. */
+(function () {
+  var OLAM = 'https://olam-creations.com/';
+  var NEW_ORIGIN = 'https://ulpan-hebrew.pages.dev';
+  var BASE = '/ulpan-hebrew/';              // "/ulpan-hebrew/"
+  var MAX_FRAGMENT = 1500000;
+
+  var p = location.pathname;
+  if (p.indexOf(BASE) !== 0) { location.replace(OLAM); return; }
+  var rel = p.indexOf(BASE) === 0 ? p.slice(BASE.length) : (p + '/' === BASE ? '' : p.replace(/^\//, ''));
+  var to = '/' + rel + location.search;
+
+  var data = {};
+  try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); data[k] = localStorage.getItem(k); } } catch (e) {}
+
+  var frag = '';
+  try {
+    var b64 = btoa(unescape(encodeURIComponent(JSON.stringify(data)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    if (b64.length <= MAX_FRAGMENT && Object.keys(data).length) frag = '#d=' + b64;
+  } catch (e) {}
+
+  location.replace(NEW_ORIGIN + '/migrate?to=' + encodeURIComponent(to) + frag);
+})();
+
+</script>
+</body>
+</html>
